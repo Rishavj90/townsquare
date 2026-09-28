@@ -5,7 +5,7 @@ const user = pgTable("user", {
     name : text("name"),
     email : text("email").notNull().unique(),
     profilePicUrl : text("profilePicUrl"),
-    bannerPicId : uuid("bannerPicUrl"),
+    bannerPicId : text("bannerPicUrl"),
     about : text("about"),
     createdAt : timestamp("created_at", { mode: "date" }).defaultNow(),
     updatedAt : timestamp("updated_at", { mode: "date" }).defaultNow()

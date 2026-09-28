@@ -4,8 +4,8 @@ import post from "./post"
 
 const save = pgTable("save", {
     id : uuid("id").primaryKey(),
-    userId : uuid("user_id").references(()=>user.id),
-    postId : uuid("post_id").references(()=>post.id),
+    userId : uuid("user_id").references(()=>user.id, {onDelete : "cascade"}),
+    postId : uuid("post_id").references(()=>post.id, {onDelete : "cascade"}),
     createdAt : timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 

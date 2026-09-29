@@ -1,18 +1,16 @@
-import {clerkClient, getAuth } from '@clerk/express'
+import {getAuth } from '@clerk/express'
+import type {NextFunction, Request, Response} from "express"
 
-async function checkAuth(req, res) {
-    const { isAuthenticated, userId } = getAuth(req)
+async function checkAuth(req:Request, res:Response, next:NextFunction) {
+    const { isAuthenticated } = getAuth(req)
 
     // If user isn't authenticated, return a 401 error
     if (!isAuthenticated) {
-    res.status(401).json({ error: 'User not authenticated' })
-    return
+        res.status(401).json({ error: 'User not authenticated' })
+        return
     }
 
-    // Use Clerk's JavaScript Backend SDK to get the user's User object
-    const user = await clerkClient.users.getUser(userId)
-
-    res.json({ user })
+    next()
 }
 
 export default checkAuth;

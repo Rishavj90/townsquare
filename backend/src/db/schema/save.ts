@@ -9,4 +9,7 @@ const save = pgTable("save", {
     createdAt : timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
+export type Save = typeof save.$inferSelect
+export type NewSave = typeof save.$inferInsert
+
 export default save;

@@ -9,4 +9,7 @@ const repost = pgTable("repost", {
     createdAt : timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
 });
 
+export type Repost = typeof repost.$inferSelect
+export type NewRepost = typeof repost.$inferInsert
+
 export default repost;

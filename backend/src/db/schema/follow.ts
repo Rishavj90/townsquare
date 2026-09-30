@@ -15,9 +15,7 @@ const follow = pgTable("follow", {
 export type Follow = typeof follow.$inferSelect
 export type NewFollow = typeof follow.$inferInsert 
 
-export const followRelations = defineRelations(
-  { user, follow },
-  (r) => ({
+export const followRelations = defineRelations({ user, follow }, (r) => ({
     follow: {
       user: r.one.user({
         from: r.follow.userId,

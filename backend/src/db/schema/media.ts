@@ -10,7 +10,7 @@ const media = pgTable("media", {
     name : text("name"),
     type: text("type"),
     createdAt : timestamp("created_at", { mode: "date" }).defaultNow(),
-    updatedAt : timestamp("updated_at", { mode: "date" }).defaultNow()
+    updatedAt : timestamp("updated_at", { mode: "date" })
 });
 
 export type Media = typeof media.$inferSelect

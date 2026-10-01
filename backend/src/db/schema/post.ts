@@ -16,27 +16,4 @@ const post = pgTable("post", {
 export type Post = typeof post.$inferSelect
 export type NewPost = typeof post.$inferInsert
 
-export const postRelation = defineRelations({post, user}, (r)=>({
-    post:{
-        parent: r.one.post({
-            from: r.post.parentPostId,
-            to:r.post.id
-        }),
-        quote: r.one.post({
-            from: r.post.quotePostId,
-            to:r.post.id
-        }),
-        author: r.one.user({
-            from:r.post.authorId,
-            to: r.user.id
-        })
-    },
-    user:{
-        post: r.many.post({
-            from: r.user.id,
-            to: r.post.authorId
-        })
-    }
-}))
-
 export default post;

@@ -3,15 +3,13 @@ import { db } from "../connectDB";
 // get post of user
 export const userPost = async (userId: string)=>{
     return await db.query.post.findMany({
-        where:{
-            
-        }
+        with: {author:true},
     })
 }
 
 // get repost of user
 export const userRepost = async (userId : string)=>{
-    return await 
+    return  
 }
 
 // get like of user

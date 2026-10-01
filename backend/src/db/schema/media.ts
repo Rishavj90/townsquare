@@ -16,29 +16,4 @@ const media = pgTable("media", {
 export type Media = typeof media.$inferSelect
 export type NewMedia = typeof media.$inferInsert
 
-export const mediaRelations = defineRelations({media, user, post}, (r)=>({
-    media:{
-        uploadedBy: r.one.user({
-            from: r.media.user_id,
-            to : r.user.id
-        }),
-        post: r.one.post({
-            from: r.media.post_id,
-            to: r.post.id
-        })
-    },
-    user:{
-        user: r.many.media({
-            from: r.user.id,
-            to: r.media.user_id
-        })
-    },
-    post:{
-        post: r.many.media({
-            from: r.post.id,
-            to: r.media.post_id
-        })
-    }
-}))
-
 export default media

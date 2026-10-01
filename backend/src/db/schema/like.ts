@@ -13,29 +13,4 @@ const like = pgTable("like", {
 export type Like = typeof like.$inferSelect
 export type NewLike = typeof like.$inferInsert
 
-export const likeRelation = defineRelations({like, user, post}, (r)=>({
-    like:{
-        likedBy:r.one.user({
-            from: r.like.userId,
-            to : r.user.id
-        }),
-        likePost:r.one.post({
-            from: r.like.postId,
-            to : r.post.id
-        })
-    },
-    user:{
-        user:r.many.like({
-            from : r.user.id,
-            to : r.like.userId
-        })
-    },
-    post:{
-        post: r.many.like({
-            from : r.post.id,
-            to : r.like.postId
-        })
-    }
-}))
-
 export default like;

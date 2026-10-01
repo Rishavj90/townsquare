@@ -1,7 +1,6 @@
 import { pgTable, text, timestamp, uuid } from "drizzle-orm/pg-core";
 import user from "./user"
 import post from "./post";
-import { defineRelations } from "drizzle-orm";
 
 const media = pgTable("media", {
     id : uuid("id").primaryKey(),

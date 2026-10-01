@@ -1,7 +1,6 @@
 import { pgTable, timestamp, uuid, text } from "drizzle-orm/pg-core";
 import user from "./user"
 import post from "./post"
-import { defineRelations } from "drizzle-orm";
 
 const like = pgTable("like", {
     id : uuid("id").primaryKey(),

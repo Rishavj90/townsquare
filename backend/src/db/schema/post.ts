@@ -1,6 +1,5 @@
 import { pgTable, text, timestamp, uuid, type AnyPgColumn } from "drizzle-orm/pg-core";
 import user from "./user"
-import { defineRelations } from "drizzle-orm";
 
 const post = pgTable("post", {
     id : uuid("id").primaryKey(),

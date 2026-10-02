@@ -53,12 +53,8 @@ const getPost= {
                         url:true
                     }
                 }
-            },where:{
-                deletedAt: {isNull: true}
             }
         }    
-    },where:{
-        deletedAt: {isNull: true}
     }
 } as const
 
@@ -122,14 +118,11 @@ export const myPost = async (userId: string)=>{
                             url:true
                         }
                     }
-                },where:{
-                    deletedAt: {isNull: true}
                 }
             }    
         },where:{
             authorId: userId,
-            parentPostId: { isNull: true},
-            deletedAt: {isNull: true}
+            parentPostId: { isNull: true}
         }, orderBy:{
             createdAt : "desc",
             id : "desc"
@@ -184,14 +177,11 @@ export const myReply = async (userId: string)=>{
                             url:true
                         }
                     },
-                },where:{
-                    deletedAt: {isNull: true}
                 }
             }
         },where:{
             authorId: userId,
-            parentPostId: { isNotNull: true},
-            deletedAt: {isNull: true}
+            parentPostId: { isNotNull: true}
         }, orderBy:{
             createdAt : "desc",
             id : "desc"

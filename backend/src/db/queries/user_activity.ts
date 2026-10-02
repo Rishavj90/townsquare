@@ -4,7 +4,7 @@ import like from "../schema/like";
 import repost from "../schema/repost";
 import save from "../schema/save";
 import post from "../schema/post"
-import user from "../schema/user";
+import follow from "../schema/follow";
 
 const postCounts = {
     numLikes: (t: typeof post) => db.$count(like, eq(like.postId, t.id)),
@@ -60,6 +60,23 @@ const getPost= {
     },where:{
         deletedAt: {isNull: true}
     }
+} as const
+
+// info about user
+export const userInfo = async (userId:string)=>{
+    return await db.query.user.findFirst({
+        columns:{
+            id:true,
+            name:true,
+            profilePicUrl:true,
+            bannerPicUrl:true,
+            about:true,
+            createdAt:true
+        },
+        where:{
+            id:userId
+        }
+    })
 }
 
 // get post of user
@@ -120,6 +137,9 @@ export const myPost = async (userId: string)=>{
     })
 }
 
+export const postCount = async (userId: string) =>
+    await db.$count(post, eq(post.authorId, userId));
+
 // get replies by user
 export const myReply = async (userId: string)=>{
     return await db.query.post.findMany({
@@ -148,7 +168,8 @@ export const myReply = async (userId: string)=>{
                     id:true,
                     content:true,
                     createdAt:true
-                },extras:postCounts,
+                },
+                extras:postCounts,
                 with:{
                     author:{
                         columns:{
@@ -166,6 +187,7 @@ export const myReply = async (userId: string)=>{
                 },where:{
                     deletedAt: {isNull: true}
                 }
+            }
         },where:{
             authorId: userId,
             parentPostId: { isNotNull: true},
@@ -228,7 +250,6 @@ export const mySave = async (userId: string)=>{
     })
 }
 
-
 // get media of user
 export const myMedia = async (userId: string)=>{
     return await db.query.media.findMany({
@@ -247,9 +268,9 @@ export const myMedia = async (userId: string)=>{
 // get followers and following of likeuser
 export const followers = async (userId: string)=>{
     return await db.query.follow.findMany({
+        columns: { id: true, createdAt: true },
         where:{
-            userId:userId,
-            followingId:{isNotNull:true}
+            followingId:userId,
         },with:{
             follower:{
                 columns:{
@@ -258,17 +279,17 @@ export const followers = async (userId: string)=>{
                     profilePicUrl:true
                 }
             }
-        },extras:{
-            numFollowers: (t)=> db.$count(t, eq(t.userId, user.id))
         }
     })
 } 
+export const followerCount = async (userId: string) =>
+    await db.$count(follow, eq(follow.followingId, userId));
 
 export const following = async (userId: string)=>{
     return await db.query.follow.findMany({
+        columns: { id: true, createdAt: true },
         where:{
-            followingId:userId,
-            userId:{isNotNull:true}
+            userId,
         },with:{
             followee:{
                 columns:{
@@ -277,8 +298,9 @@ export const following = async (userId: string)=>{
                     profilePicUrl:true
                 }
             }
-        },extras:{
-            numFollowing: (t)=> db.$count(t, eq(t.followingId, user.id))
         }
     })
 } 
+
+export const followingCount = async (userId: string) =>
+    await db.$count(follow, eq(follow.userId, userId));

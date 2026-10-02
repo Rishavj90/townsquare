@@ -3,7 +3,7 @@ import user from "./user"
 import post from "./post";
 
 const media = pgTable("media", {
-    id : uuid("id").primaryKey(),
+    id : uuid("id").primaryKey().defaultRandom(),
     user_id : text("user_id").references(()=>user.id, {onDelete : "cascade"}),
     post_id : uuid("post_id").references(()=>post.id, {onDelete : "cascade"}),
     url: text("url").notNull(),

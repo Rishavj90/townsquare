@@ -2,7 +2,7 @@ import { pgTable, text, timestamp, uuid, type AnyPgColumn } from "drizzle-orm/pg
 import user from "./user"
 
 const post = pgTable("post", {
-    id : uuid("id").primaryKey(),
+    id : uuid("id").primaryKey().defaultRandom(),
     authorId : text("user_id").notNull().references(()=>user.id),
     parentPostId : uuid("parentPostId").references(():AnyPgColumn => post.id),
     quotePostId : uuid("QuotePostId").references(():AnyPgColumn => post.id),

@@ -8,7 +8,7 @@ const post = pgTable("post", {
     quotePostId : uuid("QuotePostId").references(():AnyPgColumn => post.id),
     content : text("text"),
     createdAt : timestamp("created_at", { mode: "date" }).defaultNow().notNull(),
-    updatedAt : timestamp("updated_at", { mode: "date" }).defaultNow(),
+    updatedAt : timestamp("updated_at", { mode: "date" }),
     deletedAt : timestamp("deleted_at", { mode: "date" })
 });
 

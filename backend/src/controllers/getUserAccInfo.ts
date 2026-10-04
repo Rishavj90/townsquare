@@ -1,4 +1,17 @@
-import { followerCount, followingCount, myLike, myMedia, myPost, myReply, myRepost, mySave, userInfo } from "../db/queries/user_activity"
+import { 
+    followerCount, 
+    followingCount, 
+    myFollowers, 
+    myFollowing, 
+    myLike, 
+    myMedia, 
+    myPost, 
+    myReply, 
+    myRepost, 
+    mySave, 
+    userInfo,
+    totalPostsOfUser 
+} from "../db/queries/user_activity"
 import type { Request, Response } from "express"
 
 export const userAccInfo = async (req: Request, res:Response)=>{
@@ -6,10 +19,12 @@ export const userAccInfo = async (req: Request, res:Response)=>{
         const data = await userInfo(req.body.id)
         const followerNum = await followerCount(req.body.id)
         const followingNum = await followingCount(req.body.id)
+        const totalPost = await totalPostsOfUser(req.body.id)
         return res.json({
             ...data,
+            totalPost,
             followerNum,
-            followingNum
+            followingNum,
         })
     } catch (error) {
         console.error(error)
@@ -79,6 +94,30 @@ export const save = async (req: Request, res:Response)=>{
 export const media = async (req: Request, res:Response)=>{
     try {
         const data = await myMedia(req.body.id)
+        return res.json(data)
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({
+            error: "server error"
+        })
+    }
+}
+
+export const followers = async (req:Request, res:Response)=>{
+    try {
+        const data = await myFollowers(req.body.id)
+        return res.json(data)
+    } catch (error) {
+        console.error(error)
+        return res.status(500).json({
+            error: "server error"
+        })
+    }
+}
+
+export const following = async (req:Request, res:Response)=>{
+    try {
+        const data = await myFollowing(req.body.id)
         return res.json(data)
     } catch (error) {
         console.error(error)

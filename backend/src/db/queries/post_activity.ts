@@ -1,8 +1,5 @@
-import { eq } from "drizzle-orm";
 import { db } from "../connectDB";
-import like from "../schema/like";
-import repost from "../schema/repost";
-import save from "../schema/save";
+import { postCounts } from "./user_activity";
 
 const basicUserInfo = {
     columns:{
@@ -27,33 +24,23 @@ const authorQuoteMedia={
     }
 }as const;
 
-export const getLikes = async(postId: string)=>
-    await db.$count(like, eq(like.postId, postId))
-
-export const getRepost = async(postId: string)=>
-    await db.$count(repost, eq(repost.postId, postId))
-
-export const getSaves = async(postId: string)=>
-    await db.$count(save, eq(save.postId, postId))
-
-
 export const getPost = async (postId: string)=>{
     return await db.query.post.findFirst({
         where:{
             id: postId
-        },
+        },extras:postCounts,
         with:{
             ...authorQuoteMedia,
             replies:{
                 with:authorQuoteMedia,
                 where:{
                     parentPostId:postId
-                }
+                },extras:postCounts
             },quotes:{
                 with:authorQuoteMedia,
                 where:{
                     quotePostId:postId
-                }
+                },extras:postCounts
             },
         }
     })

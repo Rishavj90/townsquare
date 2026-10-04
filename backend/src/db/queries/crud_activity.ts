@@ -1,18 +1,32 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "../connectDB";
-import type { NewLike } from "../schema/like";
 import like from "../schema/like";
-import type { NewMedia } from "../schema/media";
 import media from "../schema/media";
-import type { NewPost } from "../schema/post";
 import post from "../schema/post";
-import type { NewRepost } from "../schema/repost";
 import repost from "../schema/repost";
-import type { NewSave } from "../schema/save";
 import save from "../schema/save";
 import follow from "../schema/follow";
 
-export const newPost = async (postData:NewPost, mediaData:NewMedia)=>{
+type userAndPost = {
+    userId:string, 
+    postId:string
+}
+
+type postData = {
+    authorId: string,
+    parentPostId: string | null,
+    quotePostId: string | null,
+    content: string,
+}
+
+type mediaData = {
+    url: string,
+    user_id: string,
+    name: string,
+    post_id: string,
+}
+
+export const newPost = async (postData:postData, mediaData:mediaData)=>{
     const p = await db.insert(post).values(postData).returning()
     const m = await db.insert(media).values(mediaData).returning()
     return {
@@ -25,49 +39,51 @@ export const deletePost = async (postId:string)=>{
     return await db.delete(post).where(eq(post.id, postId)).returning()
 }
 
-export const newLike = async (data:NewLike)=>{
+export const newLike = async (data:userAndPost)=>{
     return await db.insert(like).values(data).returning()
 }
 
-export const newRepost = async (data:NewRepost)=>{
+export const newRepost = async (data:userAndPost)=>{
     return await db.insert(repost).values(data).returning()
 }
 
-export const newSave = async (data:NewSave)=>{
+export const newSave = async (data:userAndPost)=>{
     return await db.insert(save).values(data).returning()
 }
 
-export const deleteLike = async (userId:string, postId:string)=>{
+export const deleteLike = async (data:userAndPost)=>{
     return await db.delete(like).where(and(
-        eq(like.userId, userId),
-        eq(like.postId, postId)
+        eq(like.userId, data.userId),
+        eq(like.postId, data.postId)
     )).returning()
 }
 
-export const deleteRepost = async (userId:string, postId:string)=>{
+export const deleteRepost = async (data:userAndPost)=>{
     return await db.delete(repost).where(and(
-        eq(repost.userId, userId),
-        eq(repost.postId, postId)
+        eq(repost.userId, data.userId),
+        eq(repost.postId, data.postId)
     )).returning()
 }
 
-export const deleteSave = async (userId:string, postId:string)=>{
+export const deleteSave = async (data:userAndPost)=>{
     return await db.delete(save).where(and(
-        eq(save.userId, userId),
-        eq(save.postId, postId)
+        eq(save.userId, data.userId),
+        eq(save.postId, data.postId)
     )).returning()
 }
 
-export const followUser = async (userId:string, followingId:string)=>{
-    return await db.insert(follow).values({
-        userId,
-        followingId
-    }).returning()
+type userAndfollowingUser = {
+    userId:string, 
+    followingId:string
 }
 
-export const unfollowUser = async (userId:string, followingId:string)=>{
+export const followUser = async (data:userAndfollowingUser)=>{
+    return await db.insert(follow).values(data).returning()
+}
+
+export const unfollowUser = async (data:userAndfollowingUser)=>{
     return await db.delete(follow).where(and(
-        eq(follow.userId, userId),
-        eq(follow.followingId, followingId)
+        eq(follow.userId, data.userId),
+        eq(follow.followingId, data.followingId)
     )).returning()
 }

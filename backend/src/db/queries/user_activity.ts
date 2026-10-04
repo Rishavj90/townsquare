@@ -6,7 +6,7 @@ import save from "../schema/save";
 import post from "../schema/post"
 import follow from "../schema/follow";
 
-const postCounts = {
+export const postCounts = {
     numLikes: (t: typeof post) => db.$count(like, eq(like.postId, t.id)),
     numReposts : (t: typeof post) => db.$count(repost, eq(repost.postId, t.id)),
     numSaves: (t: typeof post) => db.$count(save, eq(save.postId, t.id)),
@@ -123,7 +123,7 @@ export const myPost = async (userId: string)=>{
     })
 }
 
-export const postCount = async (userId: string) =>
+export const totalPostsOfUser = async (userId: string) =>
     await db.$count(post, eq(post.authorId, userId));
 
 // get replies by user
@@ -251,8 +251,8 @@ export const myMedia = async (userId: string)=>{
     })
 }
 
-// get followers and following of likeuser
-export const followers = async (userId: string)=>{
+// get followers and following of user
+export const myFollowers = async (userId: string)=>{
     return await db.query.follow.findMany({
         columns: { id: true, createdAt: true },
         where:{
@@ -271,7 +271,7 @@ export const followers = async (userId: string)=>{
 export const followerCount = async (userId: string) =>
     await db.$count(follow, eq(follow.followingId, userId));
 
-export const following = async (userId: string)=>{
+export const myFollowing = async (userId: string)=>{
     return await db.query.follow.findMany({
         columns: { id: true, createdAt: true },
         where:{

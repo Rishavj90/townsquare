@@ -10,6 +10,7 @@ import type { NewRepost } from "../schema/repost";
 import repost from "../schema/repost";
 import type { NewSave } from "../schema/save";
 import save from "../schema/save";
+import follow from "../schema/follow";
 
 export const newPost = async (postData:NewPost, mediaData:NewMedia)=>{
     const p = await db.insert(post).values(postData).returning()
@@ -54,5 +55,19 @@ export const deleteSave = async (userId:string, postId:string)=>{
     return await db.delete(save).where(and(
         eq(save.userId, userId),
         eq(save.postId, postId)
+    )).returning()
+}
+
+export const followUser = async (userId:string, followingId:string)=>{
+    return await db.insert(follow).values({
+        userId,
+        followingId
+    }).returning()
+}
+
+export const unfollowUser = async (userId:string, followingId:string)=>{
+    return await db.delete(follow).where(and(
+        eq(follow.userId, userId),
+        eq(follow.followingId, followingId)
     )).returning()
 }

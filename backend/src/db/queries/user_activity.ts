@@ -1,4 +1,4 @@
-import { eq } from "drizzle-orm";
+import { eq, ne } from "drizzle-orm";
 import { db } from "../connectDB";
 import like from "../schema/like";
 import repost from "../schema/repost";
@@ -85,13 +85,6 @@ export const myPost = async (userId: string)=>{
         },
         extras: postCounts,
         with:{
-            author:{
-                columns:{
-                    id:true,
-                    name:true,
-                    profilePicUrl:true
-                }
-            },
             media:{
                 columns:{
                     id:true,
@@ -181,7 +174,10 @@ export const myReply = async (userId: string)=>{
             }
         },where:{
             authorId: userId,
-            parentPostId: { isNotNull: true}
+            parentPostId: { isNotNull: true},
+            parentPost:{
+                authorId: {ne : userId}
+            }
         }, orderBy:{
             createdAt : "desc",
             id : "desc"
